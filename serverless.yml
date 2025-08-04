@@ -1,0 +1,95 @@
+service: health-product-chatbot
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: python3.11
+  region: ${opt:region, 'us-east-1'}
+  stage: ${opt:stage, 'dev'}
+  memorySize: 1024
+  timeout: 30
+  environment:
+    STAGE: ${self:provider.stage}
+    REGION: ${self:provider.region}
+    OPENSEARCH_ENDPOINT: ${cf:opensearch-${self:provider.stage}.OpenSearchEndpoint}
+    DYNAMODB_TABLE: ${cf:dynamodb-${self:provider.stage}.ConversationsTable}
+    BEDROCK_GUARDRAIL_ID: ${ssm:/health-chatbot/${self:provider.stage}/guardrail-id}
+    BEDROCK_GUARDRAIL_VERSION: ${ssm:/health-chatbot/${self:provider.stage}/guardrail-version}
+  
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - bedrock:InvokeModel
+            - bedrock:ApplyGuardrail
+          Resource: '*'
+        - Effect: Allow
+          Action:
+            - es:ESHttpGet
+            - es:ESHttpPost
+            - es:ESHttpPut
+          Resource: '${cf:opensearch-${self:provider.stage}.OpenSearchArn}/*'
+        - Effect: Allow
+          Action:
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:Query
+          Resource: '${cf:dynamodb-${self:provider.stage}.ConversationsTableArn}'
+
+plugins:
+  - serverless-python-requirements
+  - serverless-wsgi
+
+custom:
+  pythonRequirements:
+    dockerizePip: true
+    slim: true
+    strip: false
+
+functions:
+  chat:
+    handler: src.lambda.chat.handler.lambda_handler
+    events:
+      - http:
+          path: /chat
+          method: post
+          cors: true
+    layers:
+      - ${cf:shared-layer-${self:provider.stage}.SharedLayerArn}
+
+  websocket-connect:
+    handler: src.lambda.websocket.handler.connect_handler
+    events:
+      - websocket:
+          route: $connect
+
+  websocket-disconnect:
+    handler: src.lambda.websocket.handler.disconnect_handler
+    events:
+      - websocket:
+          route: $disconnect
+
+  websocket-message:
+    handler: src.lambda.websocket.handler.message_handler
+    events:
+      - websocket:
+          route: sendMessage
+
+  data-processor:
+    handler: src.lambda.data-processing.handler.lambda_handler
+    timeout: 900
+    memorySize: 2048
+    events:
+      - s3:
+          bucket: health-chatbot-data-${self:provider.stage}
+          event: s3:ObjectCreated:*
+          rules:
+            - prefix: raw-data/
+            - suffix: .json
+
+resources:
+  - ${file(infrastructure/cloudformation/api-gateway.yaml)}
+  - ${file(infrastructure/cloudformation/iam-roles.yaml)}

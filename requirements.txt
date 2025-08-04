@@ -1,0 +1,31 @@
+# AWS SDK
+boto3==1.34.84
+botocore==1.34.84
+
+# OpenSearch
+opensearch-py==2.4.2
+
+# ML & Embeddings
+sentence-transformers==2.6.1
+numpy==1.26.4
+pandas==2.2.1
+
+# API & Web
+fastapi==0.110.0
+uvicorn==0.29.0
+websockets==12.0
+
+# Utilities
+python-dotenv==1.0.1
+pydantic==2.6.4
+requests==2.31.0
+jsonschema==4.21.1
+
+# Testing
+pytest==8.1.1
+pytest-asyncio==0.23.6
+moto==5.0.5
+
+# Development
+black==24.3.0
+flake8==7.0.0

@@ -1,0 +1,48 @@
+{
+  "sample_products": [
+    {
+      "id": 1,
+      "name": "Health Supplement A",
+      "description": "A dietary supplement that supports overall health.",
+      "category": "Supplements",
+      "price": 29.99,
+      "stock": 100
+    },
+    {
+      "id": 2,
+      "name": "Health Supplement B",
+      "description": "A vitamin supplement that boosts immunity.",
+      "category": "Supplements",
+      "price": 19.99,
+      "stock": 50
+    },
+    {
+      "id": 3,
+      "name": "Health Product C",
+      "description": "A natural remedy for digestive health.",
+      "category": "Remedies",
+      "price": 15.99,
+      "stock": 75
+    }
+  ],
+  "sample_users": [
+    {
+      "id": 1,
+      "username": "user1",
+      "email": "user1@example.com",
+      "preferences": {
+        "notifications": true,
+        "newsletter": false
+      }
+    },
+    {
+      "id": 2,
+      "username": "user2",
+      "email": "user2@example.com",
+      "preferences": {
+        "notifications": false,
+        "newsletter": true
+      }
+    }
+  ]
+}

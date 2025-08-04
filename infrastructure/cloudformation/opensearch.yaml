@@ -1,0 +1,29 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: CloudFormation template for setting up OpenSearch
+
+Resources:
+  OpenSearchDomain:
+    Type: AWS::OpenSearchService::Domain
+    Properties:
+      DomainName: health-product-chatbot
+      ElasticsearchVersion: '7.10'
+      NodeToNodeEncryptionOptions:
+        Enabled: true
+      EncryptionAtRestOptions:
+        Enabled: true
+      AccessPolicies:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal: "*"
+            Action: "es:*"
+            Resource: "*"
+      AdvancedOptions:
+        "rest.action.multi.allow_explicit_index": "true"
+
+Outputs:
+  OpenSearchEndpoint:
+    Description: "OpenSearch endpoint"
+    Value: !GetAtt OpenSearchDomain.DomainEndpoint
+    Export:
+      Name: OpenSearchEndpoint

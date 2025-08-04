@@ -1,0 +1,22 @@
+{
+  "guardrails": {
+    "enabled": true,
+    "rules": [
+      {
+        "name": "No Personal Health Information",
+        "description": "Ensure that no personal health information is shared in the chat.",
+        "action": "block"
+      },
+      {
+        "name": "Respect User Privacy",
+        "description": "Do not store or share user data without consent.",
+        "action": "warn"
+      },
+      {
+        "name": "Provide Accurate Information",
+        "description": "Ensure that all health-related information provided is accurate and sourced from reliable references.",
+        "action": "alert"
+      }
+    ]
+  }
+}

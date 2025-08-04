@@ -1,0 +1,3 @@
+Flask-SocketIO
+eventlet
+requests

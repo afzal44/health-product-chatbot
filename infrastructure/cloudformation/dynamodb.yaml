@@ -1,0 +1,28 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: CloudFormation template for setting up DynamoDB for the health-product-chatbot project.
+
+Resources:
+  HealthProductTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: HealthProducts
+      AttributeDefinitions:
+        - AttributeName: productId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: productId
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+      BillingMode: PAY_PER_REQUEST
+      TimeToLiveSpecification:
+        AttributeName: ttl
+        Enabled: true
+
+Outputs:
+  HealthProductTableName:
+    Description: The name of the DynamoDB table
+    Value: !Ref HealthProductTable
+    Export:
+      Name: HealthProductTableName

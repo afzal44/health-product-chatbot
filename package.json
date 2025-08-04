@@ -1,0 +1,25 @@
+{
+  "name": "health-product-chatbot",
+  "version": "1.0.0",
+  "description": "RAG-powered health product chatbot with AWS Bedrock and OpenSearch",
+  "main": "index.js",
+  "scripts": {
+    "deploy": "serverless deploy",
+    "deploy-dev": "serverless deploy --stage dev",
+    "deploy-prod": "serverless deploy --stage prod",
+    "test": "python -m pytest tests/",
+    "setup": "./scripts/setup-environment.sh",
+    "build-frontend": "cd frontend && npm run build",
+    "lint": "flake8 src/ tests/",
+    "format": "black src/ tests/"
+  },
+  "devDependencies": {
+    "serverless": "^3.38.0",
+    "serverless-python-requirements": "^6.0.0",
+    "serverless-wsgi": "^3.0.2",
+    "serverless-domain-manager": "^7.0.4"
+  },
+  "keywords": ["chatbot", "rag", "health", "aws", "bedrock", "opensearch"],
+  "author": "Your Name",
+  "license": "MIT"
+}
